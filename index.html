@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2024</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/Flip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/Observer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollToPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/MotionPathPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/EaselPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/PixiPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/TextPlugin.min.js"></script>
+
+
+    <!-- RoughEase, ExpoScaleEase and SlowMo are all included in the EasePack file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/EasePack.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/CustomEase.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body div.container {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background-color: aliceblue;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+
+        div.container span.display-text {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-size: 2.7rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            position: fixed;
+        }
+
+        @keyframes burn {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+                filter: blur(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1.3);
+                filter: blur(4px);
+            }
+        }
+
+        .burn-text {
+            position: fixed;
+            font-size: inherit;
+            animation: burn 10s ease forwards;
+        }
+
+        .burn {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+            transition: transform 0.5s ease;
+        }
+
+        /* Initial state to hide the appended element */
+        .burn.hidden {
+            opacity: 0;
+            transform: translateY(100%);
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container">
+
+        <span class="display-text text-in" id="lyric-box">
+        </span>
+
+
+    </div>
+
+    <script>
+
+        let lyric = [
+            {
+                text: "Hey, you",
+                duration: 100, // millisecond
+                css: 8, // second
+            },
+            {
+                text: "Watch thiss",
+                duration: 3200,
+                css: 8,
+            },
+            {
+                text: "i'll shown u something",
+                duration: 3300,
+                css: 4,
+            },
+            {
+                text: "......",
+                duration: 5000,
+                css: 5,
+            },
+        ];
+
+        let loop = true;
+        let index = 0;
+        let box = document.getElementById('lyric-box');
+
+        eventLoop();
+
+        async function eventLoop() {
+            while (loop) {
+                try {
+
+                    await runTask(index);
+
+                    index = index + 1;
+
+                } catch (error) {
+
+                    // loop = false;
+                    
+                    loop = false;
+
+                    setTimeout(() => {
+                        box.innerHTML = "";
+                    }, 5000);
+
+                }
+
+            }
+        }
+
+        function runTask(index) {
+            return new Promise(resolve => {
+
+                if (index >= lyric.length) {
+                    throw new Error('end.');
+                }
+
+                setTimeout(() => {
+
+                    let el = document.createElement('p');
+
+                    el.classList.add('burn-text');
+
+                    el.innerText = lyric[index].text
+
+                    el.style.animation = `burn ${lyric[index].css}s ease forwards`;
+
+                    void el.offsetWidth;
+
+                    box.append(el);
+
+                    resolve();
+
+                }, lyric[index].duration);
+
+            });
+        }
+
+
+    </script>
+
+</body>
+
+</html>
